@@ -9,7 +9,7 @@
 
 ## 📋 Deskripsi Proyek
 
-Proyek ini merupakan aplikasi **CMS Web Berita** berbasis Laravel 13 yang dijalankan menggunakan **Laravel Sail** (Docker). Panel admin dibangun di atas template Bootstrap **SB Admin 2**. Praktikum ini berfokus pada implementasi CRUD (Create, Read, Update, Delete) untuk tiga entitas utama: **Pengguna**, **Kategori**, dan **Artikel Berita**, beserta relasi antar-tabel menggunakan Eloquent ORM.
+Proyek ini merupakan aplikasi **CMS Web Berita** berbasis Laravel 13 yang dijalankan menggunakan **Laravel Sail** (Docker). Panel admin dibangun di atas template Bootstrap **SB Admin 2**. Praktikum ini berfokus pada implementasi CRUD (Create, Read, Update, Delete) untuk empat entitas utama: **Pengguna**, **Kategori**, **tags**, dan **Artikel Berita**, beserta relasi antar-tabel menggunakan Eloquent ORM.
 
 ---
 
@@ -49,54 +49,9 @@ Proyek ini merupakan aplikasi **CMS Web Berita** berbasis Laravel 13 yang dijala
 ```
 USERS ──── has one ──── PROFILES
   │
-  └──── has many ──── ARTICLES ──── belongs to ──── CATEGORIES
-```
-
-| Tabel        | Kolom Utama                                                                          |
-|--------------|--------------------------------------------------------------------------------------|
-| `users`      | `id`, `name`, `email`, `password`, `created_at`                                     |
-| `profiles`   | `id`, `user_id` (FK), `bio`, `avatar`, `phone`                                      |
-| `categories` | `id`, `name`, `slug` (unique)                                                        |
-| `articles`   | `id`, `user_id` (FK), `category_id` (FK), `title`, `slug`, `content`, `image`      |
-
-### Relasi Eloquent
-
-- **One-to-One**: `User` ↔ `Profile` (`hasOne` / `belongsTo`)
-- **One-to-Many**: `User` → `Article` (`hasMany` / `belongsTo`)
-- **One-to-Many**: `Category` → `Article` (`hasMany` / `belongsTo`)
-
----
-
-## 🗂️ Struktur Direktori Penting
-
-```
-praktikum-14/
-├── app/
-│   ├── Http/Controllers/
-│   │   ├── UserController.php
-│   │   ├── CategoryController.php
-│   │   └── ArticleController.php
-│   └── Models/
-│       ├── User.php
-│       ├── Profile.php
-│       ├── Category.php
-│       └── Article.php
-├── database/
-│   └── migrations/
-│       ├── ..._create_users_table.php
-│       ├── ..._create_profiles_table.php
-│       ├── ..._create_categories_table.php
-│       └── ..._create_articles_table.php
-├── resources/views/
-│   └── admin/
-│       ├── layouts/app.blade.php
-│       ├── dashboard.blade.php
-│       ├── users/         (index, create, edit)
-│       ├── categories/    (index, create, edit)
-│       └── articles/      (index, create, edit)
-├── compose.yaml
-└── routes/
-    └── web.php
+  └──── has many ──── ARTICLES ──── has many ──── CATEGORIES
+                          │
+                          └──── belongs to many ──── ARTICLE_TAG ──── belongs to many ──── TAGS
 ```
 
 ---
@@ -204,37 +159,6 @@ sail artisan tinker
 sail down
 ```
 
----
-
-## 🌐 Daftar Route
-
-| Method    | URI                            | Controller Action           | Nama Route             |
-|-----------|--------------------------------|-----------------------------|------------------------|
-| GET       | `/`                            | Closure (index)             | —                      |
-| GET       | `/login`                       | Auth\LoginController        | `login`                |
-| POST      | `/register`                    | Auth\RegisterController     | `register`             |
-| GET       | `/dashboard`                   | Closure (admin.dashboard)   | `dashboard`            |
-| GET       | `/admin/users`                 | UserController@index        | `users.index`          |
-| GET       | `/admin/users/create`          | UserController@create       | `users.create`         |
-| POST      | `/admin/users`                 | UserController@store        | `users.store`          |
-| GET       | `/admin/users/{id}/edit`       | UserController@edit         | `users.edit`           |
-| PUT/PATCH | `/admin/users/{id}`            | UserController@update       | `users.update`         |
-| DELETE    | `/admin/users/{id}`            | UserController@destroy      | `users.destroy`        |
-| GET       | `/admin/categories`            | CategoryController@index    | `categories.index`     |
-| GET       | `/admin/categories/create`     | CategoryController@create   | `categories.create`    |
-| POST      | `/admin/categories`            | CategoryController@store    | `categories.store`     |
-| GET       | `/admin/categories/{id}/edit`  | CategoryController@edit     | `categories.edit`      |
-| PUT/PATCH | `/admin/categories/{id}`       | CategoryController@update   | `categories.update`    |
-| DELETE    | `/admin/categories/{id}`       | CategoryController@destroy  | `categories.destroy`   |
-| GET       | `/admin/articles`              | ArticleController@index     | `articles.index`       |
-| GET       | `/admin/articles/create`       | ArticleController@create    | `articles.create`      |
-| POST      | `/admin/articles`              | ArticleController@store     | `articles.store`       |
-| GET       | `/admin/articles/{id}/edit`    | ArticleController@edit      | `articles.edit`        |
-| PUT/PATCH | `/admin/articles/{id}`         | ArticleController@update    | `articles.update`      |
-| DELETE    | `/admin/articles/{id}`         | ArticleController@destroy   | `articles.destroy`     |
-
----
-
 ## 🔑 Akses Default
 
 Buat akun pertama melalui halaman registrasi:
@@ -265,41 +189,6 @@ Dashboard    : http://localhost:8080/dashboard
 
 ---
 
-## 🛡️ Fitur Keamanan
-
-- Password dienkripsi menggunakan `Hash::make()` (bcrypt)
-- Admin tidak dapat menghapus akunnya sendiri saat sedang login
-- Kategori tidak dapat dihapus jika masih memiliki artikel terikat
-- Semua form dilindungi CSRF token (`@csrf`)
-- Seluruh route admin dilindungi middleware `auth`
-
----
-
-## 📚 Teknologi yang Digunakan
-
-| Teknologi       | Keterangan                        |
-|-----------------|-----------------------------------|
-| Laravel 13      | PHP Framework                     |
-| Laravel Sail    | Docker development environment    |
-| PostgreSQL 18   | Database (container via Sail)     |
-| Laravel UI      | Scaffolding autentikasi           |
-| Eloquent ORM    | Database abstraction layer        |
-| SB Admin 2      | Bootstrap 4 admin template        |
-| Font Awesome    | Icon library                      |
-| Vite            | Asset bundler                     |
-
----
-
-## 👨‍💻 Informasi Praktikum
-
-| Info        | Detail                             |
-|-------------|------------------------------------|
-| Pertemuan   | 14                                 |
-| Topik       | Implementasi CRUD Dasar Web Berita |
-| Framework   | Laravel 13 + Laravel Sail          |
-| Estimasi    | 120 Menit                          |
-| Tingkat     | Pemula – Menengah                  |
-
 ## 📝 Lisensi
 
-Proyek ini dibuat untuk keperluan **praktikum akademik** — Pemrograman Web Berbasis Framework, Tahun Ajaran 2025/2026.
+Proyek ini dibuat untuk keperluan **praktikum akademik** — Pemrograman Web Dasar, Tahun Ajaran 2025/2026.
