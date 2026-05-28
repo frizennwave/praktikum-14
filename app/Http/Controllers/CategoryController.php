@@ -60,7 +60,6 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
-        // Pastikan tidak ada artikel terikat
         if ($category->articles()->count() > 0) {
             return redirect()->route('categories.index')->with('error', 'Kategori tidak bisa dihapus karena memiliki artikel!');
         }

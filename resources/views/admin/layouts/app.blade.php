@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }} - Admin Dashboard</title>
+    <title>{{ config('app.name', 'Laravel') }} - Dashboard</title>
 
     <link href="{{ asset('sbadmin2/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
@@ -27,7 +27,7 @@
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-newspaper"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">News Admin</div>
+                <div class="sidebar-brand-text mx-3">infohoax.id</div>
             </a>
 
             <hr class="sidebar-divider my-0">
@@ -65,6 +65,7 @@
                     <span>Manajemen Kategori</span>
                 </a>
             </li>
+
 
             <hr class="sidebar-divider">
 
@@ -143,10 +144,10 @@
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">
                                     {{ Auth::check() ? Auth::user()->name : 'Guest Admin' }}
                                 </span>
-                                <img class="img-profile rounded-circle" src="{{ asset('sbadmin2/img/undraw_profile.svg') }}">
+                                <img class="img-profile rounded-circle" src="{{ Auth::user()->profile?->avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) }}">
                             </a>
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="{{ route('profile.edit') }}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i> Profil
                                 </a>
                                 <a class="dropdown-item" href="#">

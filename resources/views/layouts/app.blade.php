@@ -25,29 +25,7 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Politik</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Teknologi</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Olahraga</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Hiburan</a>
-                        </li>
-                    </ul>
-
                     <ul class="navbar-nav ms-auto">
-                        <form class="d-flex me-3" role="search">
-                            <input class="form-control form-control-sm me-2" type="search" placeholder="Cari berita..." aria-label="Search">
-                        </form>
-
                         @guest
                             @if (Route::has('login'))
                                 <li class="nav-item">
@@ -68,14 +46,14 @@
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ url('/dashboard') }}">
-                                        🖥️ Dashboard Admin
+                                        Dashboard
                                     </a>
                                     <div class="dropdown-divider"></div>
 
                                     <a class="dropdown-item text-danger" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        🚪 {{ __('Logout') }}
+                                        {{ __('Logout') }}
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

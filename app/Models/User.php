@@ -29,4 +29,25 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    protected static function booted()
+    {
+        static::created(function ($user) {
+            $avatarUrl = 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=random&color=fff';
+
+            $user->profile()->create([
+                'phone' => null,
+                'bio' => null,
+                'avatar' => $avatarUrl,
+            ]);
+        });
+    }
+
+    public function profile() {
+        return $this->hasOne(Profile::class);
+    }
+
+    public function articles() {
+        return $this->hasMany(Article::class);
+    }
 }

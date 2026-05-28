@@ -67,7 +67,6 @@ class UserController extends Controller
             'email' => $request->email,
         ];
 
-        // Ganti password hanya jika diinputkan
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
         }
@@ -79,7 +78,6 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        // Cegah agar user yang sedang login tidak menghapus akunnya sendiri
         if ($user->id === auth()->id()) {
             return redirect()->route('users.index')->with('error', 'Anda tidak dapat menghapus akun Anda sendiri yang sedang aktif login!');
         }

@@ -20,40 +20,69 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Daftar Artikel Berita</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Daftar Artikel Berita Terbit</h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-bordered table-striped" width="100%" cellspacing="0">
-                <thead class="bg-primary text-white">
+                <thead class="bg-primary text-white text-center">
                     <tr>
-                        <th width="5%" class="text-center">No</th>
-                        <th>Judul Berita</th>
-                        <th>Kategori</th>
-                        <th>Penulis</th>
-                        <th>Tanggal Rilis</th>
-                        <th width="20%" class="text-center">Aksi</th>
+                        <th width="5%">No</th>
+                        <th width="15%">Gambar</th>
+                        <th>Rincian Berita</th>
+                        <th width="15%">Kategori & Tag</th>
+                        <th width="15%">Penulis</th>
+                        <th width="15%">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($articles as $article)
                     <tr>
-                        <td class="text-center">{{ $loop->iteration }}</td>
-                        <td>
-                            <strong>{{ $article->title }}</strong>
-                            <small class="d-block text-muted">Slug: {{ $article->slug }}</small>
+                        <td class="text-center align-middle">{{ $loop->iteration }}</td>
+                        <td class="text-center align-middle">
+                            @if($article->image)
+                                <img src="{{ asset('storage/' . $article->image) }}" class="img-thumbnail rounded" style="max-width: 100px; max-height: 80px; object-fit: cover;" alt="Sampul">
+                            @else
+                                <span class="badge badge-secondary">Tidak ada gambar</span>
+                            @endif
                         </td>
-                        <td><span class="badge badge-info shadow-sm px-2 py-1">{{ $article->category->name }}</span></td>
-                        <td><i class="fas fa-user-edit mr-1 text-secondary"></i> {{ $article->user->name }}</td>
-                        <td>{{ $article->created_at->format('d M Y H:i') }} WIB</td>
-                        <td class="text-center">
-                            <a href="{{ route('articles.edit', $article->id) }}" class="btn btn-warning btn-sm shadow-sm">
+                        <td class="align-middle">
+                            <h6 class="font-weight-bold mb-1 text-dark">{{ $article->title }}</h6>
+                            <small class="text-muted d-block"><i class="far fa-calendar-alt mr-1"></i> Terbit: {{ $article->created_at->format('d M Y H:i') }} WIB</small>
+                            <small class="text-secondary d-block"><i class="fas fa-link mr-1"></i> {{ $article->slug }}</small>
+                        </td>
+                        <td class="align-middle text-center">
+                            <span class="badge badge-info shadow-sm px-2 py-1 mb-2 d-inline-block">{{ $article->category->name }}</span>
+                            <div class="d-block">
+                                @forelse($article->tags as $tag)
+                                    <span class="badge badge-light border text-dark mr-1 mb-1">#{{ $tag->name }}</span>
+                                @empty
+                                    <span class="text-muted small d-block">No tags</span>
+                                @endforelse
+                            </div>
+                        </td>
+                        <td class="align-middle">
+                            <span class="font-weight-bold text-dark"><i class="fas fa-user-circle mr-1"></i> {{ $article->user->name }}</span>
+
+                            <!-- Relasi One-to-One dengan Profiles -->
+                            @if($article->user->profile && $article->user->profile->bio)
+                                <small class="d-block text-muted mt-1 font-italic border-top pt-1" title="Profil Penulis">
+                                    "{{ Str::limit($article->user->profile->bio, 40) }}"
+                                </small>
+                            @else
+                                <small class="d-block text-muted mt-1 font-italic border-top pt-1">
+                                    (Bio profil kosong)
+                                </small>
+                            @endif
+                        </td>
+                        <td class="text-center align-middle">
+                            <a href="{{ route('articles.edit', $article->id) }}" class="btn btn-warning btn-sm shadow-sm mb-1 d-block mx-auto" style="width: 80px;">
                                 <i class="fas fa-edit fa-xs"></i> Edit
                             </a>
-                            <form action="{{ route('articles.destroy', $article->id) }}" method="POST" class="d-inline">
+                            <form action="{{ route('articles.destroy', $article->id) }}" method="POST" class="d-block">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm shadow-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus berita ini?')">
+                                <button type="submit" class="btn btn-danger btn-sm shadow-sm mx-auto" style="width: 80px;" onclick="return confirm('Apakah Anda yakin ingin menghapus berita ini?')">
                                     <i class="fas fa-trash fa-xs"></i> Hapus
                                 </button>
                             </form>
@@ -62,7 +91,7 @@
                     @empty
                     <tr>
                         <td colspan="6" class="text-center py-4 text-muted">
-                            <i class="fas fa-file-invoice fa-2x mb-2 d-block"></i> Belum ada data berita. Silakan tulis berita baru.
+                            <i class="fas fa-file-invoice fa-2x mb-2 d-block"></i> Belum ada data berita yang dipublikasikan.
                         </td>
                     </tr>
                     @endforelse
@@ -72,3 +101,4 @@
     </div>
 </div>
 @endsection
+

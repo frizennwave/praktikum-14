@@ -14,7 +14,7 @@
         <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-pencil-alt mr-2"></i>Form Pembuatan Berita Baru</h6>
     </div>
     <div class="card-body">
-        <form action="{{ route('articles.store') }}" method="POST">
+        <form action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="row">
@@ -46,6 +46,32 @@
                 </div>
             </div>
 
+            <!-- Upload File Image -->
+            <div class="form-group">
+                <label for="image" class="font-weight-bold text-dark">Gambar Sampul Berita</label>
+                <input type="file" class="form-control-file @error('image') is-invalid @enderror" id="image" name="image" required>
+                <small class="text-muted">Format yang diizinkan: JPG, PNG, JPEG, WEBP. Maksimal 2MB.</small>
+                @error('image')
+                <div class="text-danger mt-1 small font-weight-bold">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <!-- Multi Select / Checkbox Tags -->
+            <div class="form-group">
+                <label class="font-weight-bold text-dark d-block">Pilih Tag/Label Berita</label>
+                <div class="row px-3">
+                    @forelse($tags as $tag)
+                    <div class="custom-control custom-checkbox mr-4 mb-2">
+                        <input type="checkbox" class="custom-control-input" id="tag-{{ $tag->id }}" name="tags[]" value="{{ $tag->id }}"
+                            {{ is_array(old('tags')) && in_array($tag->id, old('tags')) ? 'checked' : '' }}>
+                        <label class="custom-control-label text-dark" for="tag-{{ $tag->id }}">{{ $tag->name }}</label>
+                    </div>
+                    @empty
+                    <span class="text-muted small">Belum ada tag yang tersedia. Silakan <a href="{{ route('tags.create') }}">buat tag baru</a> terlebih dahulu.</span>
+                    @endforelse
+                </div>
+            </div>
+
             <div class="form-group">
                 <label for="content" class="font-weight-bold text-dark">Isi Berita Lengkap</label>
                 <textarea class="form-control @error('content') is-invalid @enderror" id="content" name="content" rows="10" placeholder="Tuliskan berita secara mendalam..." required>{{ old('content') }}</textarea>
@@ -63,3 +89,4 @@
     </div>
 </div>
 @endsection
+

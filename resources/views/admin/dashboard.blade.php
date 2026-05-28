@@ -6,12 +6,11 @@
         $categoryCount = \App\Models\Category::count();
         $articleCount = \App\Models\Article::count();
 
-        // Mengambil 5 berita terbaru untuk visualisasi tabel dashboard
         $latestArticles = \App\Models\Article::latest()->take(5)->get();
     @endphp
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Dashboard Admin</h1>
+        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
         <a href="{{ route('articles.create') }}" class="btn btn-sm btn-primary shadow-sm">
             <span class="icon text-white-50">
                 <i class="fas fa-plus fa-sm"></i>

@@ -16,6 +16,9 @@ Proyek ini merupakan aplikasi **CMS Web Berita** berbasis Laravel 13 yang dijala
 ### Home
 ![Home](./public/images/home.png)
 
+### Detail
+![Detail](./public/images/detail.png)
+
 ### Dashboard
 ![Dashboard](./public/images/dashboard.png)
 
